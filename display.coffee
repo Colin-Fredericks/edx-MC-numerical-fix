@@ -467,6 +467,24 @@ class @Problem
     #     to change "Check"/"Final check" enable status in case of some manipulations with answers
     answered = true
 
+    button_for_choicetext_checked = false
+    @el.find(".choicetextgroup").each (i, choicegroup_block) =>
+      checked = false
+      $(choicegroup_block).find("input[type=checkbox], input[type=radio]").each (j, checkbox_or_radio) =>
+        if $(checkbox_or_radio).is(':checked')
+          checked = true
+          at_least_one_button_checked = true
+        if bind
+          $(checkbox_or_radio).on 'click', (e) =>
+            @checkAnswersAndCheckButton()
+            return
+          return
+      if not checked
+        answered = false
+        return
+    if button_for_choicetext_checked
+      answered = true
+
     at_least_one_text_input_found = false
     one_text_input_filled = false
     @el.find("input:text").each (i, text_field) =>
@@ -482,6 +500,21 @@ class @Problem
     if at_least_one_text_input_found and not one_text_input_filled
       answered = false
 
+    @el.find(".choicegroup").each (i, choicegroup_block) =>
+      checked = false
+      $(choicegroup_block).find("input[type=checkbox], input[type=radio]").each (j, checkbox_or_radio) =>
+        if $(checkbox_or_radio).is(':checked')
+          checked = true
+          at_least_one_button_checked = true
+        if bind
+          $(checkbox_or_radio).on 'click', (e) =>
+            @checkAnswersAndCheckButton()
+            return
+          return
+      if not checked
+        answered = false
+        return
+
     @el.find("select").each (i, select_field) =>
       selected_option = $(select_field).find("option:selected").text().trim()
       if selected_option is ''
@@ -490,20 +523,6 @@ class @Problem
         $(select_field).on 'change', (e) =>
           @checkAnswersAndCheckButton()
           return
-        return
-
-    @el.find(".choicegroup").each (i, choicegroup_block) =>
-      checked = false
-      $(choicegroup_block).find("input[type=checkbox], input[type=radio]").each (j, checkbox_or_radio) =>
-        if $(checkbox_or_radio).is(':checked')
-          checked = true
-        if bind
-          $(checkbox_or_radio).on 'click', (e) =>
-            @checkAnswersAndCheckButton()
-            return
-          return
-      if not checked
-        answered = false
         return
 
     if answered
