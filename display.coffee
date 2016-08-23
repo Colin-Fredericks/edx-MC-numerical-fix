@@ -467,20 +467,6 @@ class @Problem
     #     to change "Check"/"Final check" enable status in case of some manipulations with answers
     answered = true
 
-    @el.find(".choicetextgroup").each (i, choicegroup_block) =>
-      checked = false
-      $(choicegroup_block).find("input[type=checkbox], input[type=radio]").each (j, checkbox_or_radio) =>
-        if $(checkbox_or_radio).is(':checked')
-          checked = true
-        if bind
-          $(checkbox_or_radio).on 'click', (e) =>
-            @checkAnswersAndCheckButton()
-            return
-          return
-      if not checked
-        answered = false
-        return
-
     at_least_one_text_input_found = false
     one_text_input_filled = false
     @el.find("input:text").not('.ctinput').each (i, text_field) =>
@@ -496,7 +482,7 @@ class @Problem
     if at_least_one_text_input_found and not one_text_input_filled
       answered = false
 
-    @el.find(".choicegroup").each (i, choicegroup_block) =>
+    @el.find(".choicegroup, .choicetextgroup").each (i, choicegroup_block) =>
       checked = false
       $(choicegroup_block).find("input[type=checkbox], input[type=radio]").each (j, checkbox_or_radio) =>
         if $(checkbox_or_radio).is(':checked')
