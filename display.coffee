@@ -482,6 +482,16 @@ class @Problem
     if at_least_one_text_input_found and not one_text_input_filled
       answered = false
 
+    @el.find("select").each (i, select_field) =>
+      selected_option = $(select_field).find("option:selected").text().trim()
+      if selected_option is ''
+        answered = false
+      if bind
+        $(select_field).on 'change', (e) =>
+          @checkAnswersAndCheckButton()
+          return
+        return
+
     @el.find(".choicegroup").each (i, choicegroup_block) =>
       checked = false
       $(choicegroup_block).find("input[type=checkbox], input[type=radio]").each (j, checkbox_or_radio) =>
@@ -494,16 +504,6 @@ class @Problem
           return
       if not checked
         answered = false
-        return
-
-    @el.find("select").each (i, select_field) =>
-      selected_option = $(select_field).find("option:selected").text().trim()
-      if selected_option is ''
-        answered = false
-      if bind
-        $(select_field).on 'change', (e) =>
-          @checkAnswersAndCheckButton()
-          return
         return
 
     if answered
